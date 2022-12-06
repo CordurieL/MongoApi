@@ -2,4 +2,4 @@
 /public/vendor 
 /mongo-volume
 /public/composer.lock
-
+/vendor 
