@@ -1,4 +1,5 @@
 .vscode
-*/vendor 
-./mongo-volume
-*/composer.lock
+/public/vendor 
+/mongo-volume
+/public/composer.lock
+
