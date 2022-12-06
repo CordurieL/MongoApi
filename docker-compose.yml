@@ -1,25 +1,32 @@
 version: "3"
+
+networks:
+  catamongo.net:
+    driver: bridge
 services:
   php:
-    image: php:7.4-fpm
-    command: php -S 0.0.0.0:8080
-    working_dir: /app/public
+    image: canals/php:8.0
     ports:
-      - "8080:8080"
+      - "12080:80"
+      - "12443:443"
     volumes:
-      - .:/app
-    depends_on:
-      - database
-  database:
-    image: "mongo"
-    container_name: "mongo-docker"
-    environment:
-      - MONGO_INITDB_DATABASE=firstmongodb
-      - MONGO_INITDB_USERNAME = root
-      - MONGO_INITDB_PASSWORD = rootpassword
+      - ./public:/var/www/html
+      - ./src:/var/www/src
+    working_dir: /var/www/src
+    networks:
+      - catamongo.net
+  mongo:
+    image: mongo:latest
     volumes:
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./mongo-volume:/data/db
+    - ./data:/var/data
+    working_dir: /var/data
+    networks:
+    - catamongo.net
     ports:
-      - "27017-27019:27017-27019"
-    restart: always
+    - 27017:27017
+  mongo-express:
+    image: mongo-express:latest
+    networks:
+    - catamongo.net
+    ports:
+    - "8081:8081"
